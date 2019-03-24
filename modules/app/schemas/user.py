@@ -7,6 +7,7 @@ user_schema = {
     "properties": {
         "name": {
             "type": "string",
+            "minLength": 20
         },
         "email": {
             "type": "string",
@@ -15,10 +16,12 @@ user_schema = {
         "password": {
             "type": "string",
             "minLength": 5
+        },
+        "re_password": {
+            "type": "string",
         }
     },
     "required": ["email", "password"],
-    "additionalProperties": False
 }
 
 
@@ -29,4 +32,7 @@ def validate_user(data):
         return {'ok': False, 'message': e}
     except SchemaError as e:
         return {'ok': False, 'message': e}
+    if data.get('re_password') and data['re_password'] != data['password']:
+        return {'ok': False, 'message': 'Passwords don\'t match !'}
+
     return {'ok': True, 'data': data}

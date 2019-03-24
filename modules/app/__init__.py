@@ -1,13 +1,14 @@
 ''' flask app with mongo '''
 import os
+import sys
 import json
 import datetime
 from bson.objectid import ObjectId
 from flask import Flask
-import logger
-from flask_pymongo import PyMongo
-from flask_jwt_extended import JWTManager
-from flask_bcrypt import Bcrypt
+
+DB_URL = 'mongodb://localhost:27017/cinemahub'
+APP_SECRET_KEY = "cdsrytrjytdgffdssda4875"
+JWT_SECRET_KEY = "secKeyJWT010"
 
 class JSONEncoder(json.JSONEncoder):
     ''' extend json-encoder class'''
@@ -22,6 +23,12 @@ class JSONEncoder(json.JSONEncoder):
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+    app.secret_key = APP_SECRET_KEY
+    # add mongo url to flask config, so that flask_pymongo can use it to make connection
+    app.config['MONGO_URI'] = DB_URL
+    app.config['JWT_SECRET_KEY'] = JWT_SECRET_KEY
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
+
     # app.config.from_mapping(
     #     SECRET_KEY='dev',
     #     DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
@@ -46,26 +53,4 @@ def create_app(test_config=None):
     return app
 
 
-ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-os.environ.update({'ROOT_PATH': ROOT_PATH})
-sys.path.append(os.path.join(ROOT_PATH, 'modules'))
 
-DB_URL = 'mongodb://mongodb:27017/cinemahubdb'
-SECRET = "secKey"
-os.environ.update({'DB': DB_URL})
-os.environ.update({'SECRET': SECRET})
-
-# create the flask object
-app = create_app()
-# add mongo url to flask config, so that flask_pymongo can use it to make connection
-app.config['MONGO_URI'] = os.environ.get('DB')
-app.config['JWT_SECRET_KEY'] = os.environ.get('SECRET')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
-
-mongo = PyMongo(app)
-flask_bcrypt = Bcrypt(app)
-jwt = JWTManager(app)
-
-# Create a logger object to log the info and debug
-LOG = logger.get_root_logger(os.environ.get(
-    'ROOT_LOGGER', 'root'), filename=os.path.join(ROOT_PATH, 'output.log'))
