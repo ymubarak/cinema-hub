@@ -2,6 +2,7 @@ from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 from flask_pymongo import PyMongo
 
+USER_TYPES = ['A', 'R', 'C'] # Admin, Regular user, Cinema
 LOG = None
 app = None
 mongo = None

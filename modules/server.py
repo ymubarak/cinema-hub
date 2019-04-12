@@ -5,6 +5,7 @@ import requests
 import logger
 from flask import redirect, url_for, send_from_directory, render_template, session, g
 from app import create_app
+import repo
 
 VIEW_DIR = 'templates'
 ERROR_PAGE = '404.html'
@@ -20,11 +21,10 @@ app = create_app()
 LOG = logger.get_root_logger(os.environ.get(
     'ROOT_LOGGER', 'root'), filename=os.path.join(os.environ.get('ROOT_PATH'), 'output.log'))
 
-import repo
+# initialize repo
 repo.init(app, LOG)
-print(repo.flask_bcrypt.generate_password_hash("admin"))
 
-# register different blueprints
+# registers blueprints
 from app.controllers import auth
 app.register_blueprint(auth.bp)
 
@@ -44,6 +44,7 @@ def index():
     else:
         return redirect(url_for('auth.register'))
 
+# check user is logged in before any request
 @app.before_request
 def load_logged_in_user():
     user_id = session.get('userid')
@@ -52,12 +53,14 @@ def load_logged_in_user():
     else:
         g.user = user_id
 
+
 @app.route('/<path:path>')
 def static_proxy(path):
     """ static folder serve """
     file_name = path.split('/')[-1]
     dir_name = os.path.join(VIEW_DIR, '/'.join(path.split('/')[:-1]))
     return send_from_directory(dir_name, file_name)
+
 
 if __name__ == '__main__':
     LOG.info('running environment: %s', os.environ.get('ENV'))

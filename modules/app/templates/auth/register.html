@@ -36,14 +36,14 @@
             <div class="login100-more" style="background-image: url('/static/login/images/bg-01.jpg');"></div>
 
             <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
-                <form method="POST" class="login100-form validate-form">
+                <form id="signup_form" method="POST" class="login100-form validate-form">
                     <span class="login100-form-title p-b-59">
                         Sign Up
                     </span>
 
                     <div class="wrap-input100 validate-input" data-validate="Name is required">
                         <span class="label-input100">Full Name</span>
-                        <input class="input100" type="text" name="name" placeholder="Name...">
+                        <input class="input100" type="text" name="uname" placeholder="Name...">
                         <span class="focus-input100"></span>
                     </div>
 
@@ -84,7 +84,7 @@
                     <div class="container-login100-form-btn">
                         <div class="wrap-login100-form-btn">
                             <div class="login100-form-bgbtn"></div>
-                            <button class="login100-form-btn">
+                            <button id="signup" class="login100-form-btn">
                                 Sign Up
                             </button>
                         </div>
@@ -115,6 +115,6 @@
     <script src="{{ url_for('static', filename='register/vendor/countdowntime/countdowntime.js') }}"></script>
 <!--===============================================================================================-->
     <script src="{{ url_for('static', filename='register/js/main.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
 </body>
 </html>

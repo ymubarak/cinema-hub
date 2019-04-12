@@ -2,7 +2,7 @@
 from flask import request, jsonify, render_template, Blueprint, session
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity)
-from repo import mongo, flask_bcrypt, jwt, LOG
+from repo import mongo, flask_bcrypt, jwt, LOG, USER_TYPES
 from app.schemas.user import validate_user
 # from repo import mongo, flask_bcrypt, jwt, LOG
 
@@ -24,13 +24,17 @@ def unauthorized_response(callback):
 def register():
     ''' register user endpoint '''
     if request.method == 'POST':
-        data = validate_user(request.json)
+        data = validate_user(request.get_json())
         if data['ok']:
-            data = data['data']
-            data['password'] = flask_bcrypt.generate_password_hash(
-                data['password'])
-            data['type'] = USER_TYPES[1]
-            mongo.db.users.insert_one(data)
+            user = data['data']
+            existing_user = mongo.db.users.find_one({'email': user['email']})
+            if existing_user:
+                return jsonify({'ok': False, 'message': 'User email already exists!'}), 400
+            # new user -> hash password and store user
+            user['password'] = flask_bcrypt.generate_password_hash(
+                user['password'])
+            user['type'] = USER_TYPES[1]
+            mongo.db.users.insert_one(user)
             return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
         else:
             return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
@@ -42,21 +46,25 @@ def register():
 def login():
     ''' auth endpoint '''
     if request.method == 'POST':
-        data = validate_user(request.form)
+        data = validate_user(request.get_json())
         if data['ok']:
-            data = data['data']
-            user = mongo.db.users.find_one({'email': data['email']})
+            logging_user = data['data']
+            # check if user email exists
+            user = mongo.db.users.find_one({'email': logging_user['email']})
             LOG.debug(user)
-            if user and flask_bcrypt.check_password_hash(user['password'], data['password']):
+            if user == None: # user doesn't exist
+                return jsonify({'ok': False, 'message': 'User not found'}), 401
+            # if user exists
+            if flask_bcrypt.check_password_hash(user['password'], logging_user['password']):
                 del user['password']
-                access_token = create_access_token(identity=data)
-                refresh_token = create_refresh_token(identity=data)
+                access_token = create_access_token(identity=logging_user)
+                refresh_token = create_refresh_token(identity=logging_user)
                 user['token'] = access_token
                 user['refresh'] = refresh_token
                 session['userid'] = user['_id']
                 return jsonify({'ok': True, 'data': user}), 200
             else:
-                return jsonify({'ok': False, 'message': 'invalid username or password'}), 401
+                return jsonify({'ok': False, 'message': 'Invalid email or password'}), 401
         else:
             return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 
