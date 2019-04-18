@@ -3,7 +3,7 @@ import os
 import sys
 import requests
 import logger
-from flask import redirect, url_for, send_from_directory, render_template, session, g
+from flask import jsonify, redirect, url_for, send_from_directory, render_template, session, g
 from app import create_app
 import repo
 
@@ -26,7 +26,16 @@ repo.init(app, LOG)
 
 # registers blueprints
 from app.controllers import auth
+from app.models import admin
+from app.models import cinema
+from app.models import user
+from app.models import reports
+
 app.register_blueprint(auth.bp)
+app.register_blueprint(admin.bp)
+app.register_blueprint(cinema.bp)
+app.register_blueprint(user.bp)
+app.register_blueprint(reports.bp)
 
 @app.errorhandler(404)
 def not_found(error):
@@ -39,7 +48,7 @@ def not_found(error):
 @app.route('/')
 def index():
     """ static files serve """
-    if g.user:
+    if g.usermail:
         return render_template(HOME_PAGE)
     else:
         return redirect(url_for('auth.register'))
@@ -47,11 +56,7 @@ def index():
 # check user is logged in before any request
 @app.before_request
 def load_logged_in_user():
-    user_id = session.get('userid')
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = user_id
+    g.usermail  = session.get('usermail')
 
 
 @app.route('/<path:path>')

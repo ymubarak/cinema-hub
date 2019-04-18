@@ -1,14 +1,16 @@
-from jsonschema import validate
-from jsonschema.exceptions import ValidationError
-from jsonschema.exceptions import SchemaError
+from .schema import *
 
-user_schema = {
+NAME_MAX_LENGTH = 20
+NAME_MIN_LENGTH = 3
+PASSWORD_MIN_LENGTH = 5
+
+registeration_schema = {
     "type": "object",
     "properties": {
         "uname": {
             "type": "string",
-            "maxLength": 20,
-            "minLength": 3
+            "maxLength": NAME_MAX_LENGTH,
+            "minLength": NAME_MIN_LENGTH
         },
         "email": {
             "type": "string",
@@ -16,24 +18,39 @@ user_schema = {
         },
         "password": {
             "type": "string",
-            "minLength": 5
+            "minLength": PASSWORD_MIN_LENGTH
         },
         "re_password": {
             "type": "string",
         }
     },
+    "required": ["uname", "email", "password", "re_password"],
+}
+
+login_schema = {
+    "type": "object",
+    "properties": {
+        "email": {
+            "type": "string",
+            "format": "email"
+        },
+        "password": {
+            "type": "string",
+            "minLength": PASSWORD_MIN_LENGTH
+        }
+    },
     "required": ["email", "password"],
 }
 
-
-def validate_user(data):
-    try:
-        validate(data, user_schema)
-    except ValidationError as e:
-        return {'ok': False, 'message': e}
-    except SchemaError as e:
-        return {'ok': False, 'message': e}
-    if data.get('re_password') and data['re_password'] != data['password']:
+def validate_registering_user(user_data):
+    result = validate_schema(user_data, registeration_schema)
+    if not result['ok']:
+        return result
+    elif user_data['re_password'] != user_data['password']:
         return {'ok': False, 'message': 'Passwords don\'t match !'}
 
-    return {'ok': True, 'data': data}
+    return result
+
+
+def validate_logging_user(user_data):
+    return validate_schema(user_data, login_schema)

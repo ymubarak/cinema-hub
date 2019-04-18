@@ -1,12 +1,11 @@
 ''' controller and routes for users '''
-from flask import request, jsonify, render_template, Blueprint, session
+from flask import request, jsonify, redirect, url_for, render_template, Blueprint, session
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity)
 from repo import mongo, flask_bcrypt, jwt, LOG, USER_TYPES
-from app.schemas.user import validate_user
-# from repo import mongo, flask_bcrypt, jwt, LOG
+from app.schemas.user import validate_registering_user, validate_logging_user
 
-USER_TYPES = ['A', 'R', 'C'] # Admin, Regular user, Cinema
+
 LOGIN_PAGE = 'auth/login.html'
 REGISTER_PAGE = 'auth/register.html'
 
@@ -24,17 +23,20 @@ def unauthorized_response(callback):
 def register():
     ''' register user endpoint '''
     if request.method == 'POST':
-        data = validate_user(request.get_json())
+        data = validate_registering_user(request.get_json())
         if data['ok']:
             user = data['data']
             existing_user = mongo.db.users.find_one({'email': user['email']})
             if existing_user:
                 return jsonify({'ok': False, 'message': 'User email already exists!'}), 400
             # new user -> hash password and store user
+            del user['re_password']
             user['password'] = flask_bcrypt.generate_password_hash(
                 user['password'])
             user['type'] = USER_TYPES[1]
-            mongo.db.users.insert_one(user)
+            response = mongo.db.users.insert_one(user)
+            if response.acknowledged == False:
+                return jsonify({'ok': False, 'message': 'Registeration failed!: {}'}), 400
             return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
         else:
             return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
@@ -46,12 +48,12 @@ def register():
 def login():
     ''' auth endpoint '''
     if request.method == 'POST':
-        data = validate_user(request.get_json())
+        data = validate_logging_user(request.get_json())
         if data['ok']:
             logging_user = data['data']
             # check if user email exists
             user = mongo.db.users.find_one({'email': logging_user['email']})
-            LOG.debug(user)
+            # LOG.debug(user)
             if user == None: # user doesn't exist
                 return jsonify({'ok': False, 'message': 'User not found'}), 401
             # if user exists
@@ -61,7 +63,7 @@ def login():
                 refresh_token = create_refresh_token(identity=logging_user)
                 user['token'] = access_token
                 user['refresh'] = refresh_token
-                session['userid'] = user['_id']
+                session['usermail'] = user['email']
                 return jsonify({'ok': True, 'data': user}), 200
             else:
                 return jsonify({'ok': False, 'message': 'Invalid email or password'}), 401
@@ -75,6 +77,7 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('index'))
+
 
 @bp.route('/refresh', methods=['POST'])
 @jwt_refresh_token_required
