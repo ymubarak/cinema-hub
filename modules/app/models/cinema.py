@@ -3,7 +3,7 @@ from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity)
 from repo import mongo, flask_bcrypt, jwt, LOG, USER_TYPES
 from app.schemas.movie import validate_movie
-
+from app.schemas.cinema import validate_cinema_edit
 
 bp = Blueprint('cinema', __name__)
 
@@ -59,3 +59,27 @@ def remove_movie():
             return jsonify({'ok': False, 'message': 'Error during removing movie'}), 400
 
     return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(movie_name)}), 400
+
+
+@bp.route('/editprofile', methods=['POST'])
+def edit_profile():
+    ''' edit profile'''
+    if not g.usermail:
+        return jsonify({'ok': True , 'message': 'User not logged. Please login first.'}), 401
+
+    data = validate_cinema_edit(request.get_json())
+    if data['ok']:
+        user = mongo.db.users.find_one({'email': g.usermail})
+        if user and user['type'] == USER_TYPES[2]:
+            edit = data['data']
+            update = {'$set': {'info': edit['info'], 'location': edit['location']}}
+            response = mongo.db.cinemas.update_one({'email': user['email']}, update)
+            if response.acknowledged:
+                return jsonify({'ok': True, 'message': 'Cinema profile was updated successfully!'}), 200
+            else:
+                return jsonify({'ok': False, 'message': 'Error during updating cinema profile'}), 400
+
+        msg, err = 'User does not exist !', 400 if not user else 'Unauthorized action: Only cinemas can edit profile!', 401
+        return jsonify({'ok': False, 'message': msg}), err
+
+    return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format( data['message'])}), 400

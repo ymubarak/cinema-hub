@@ -1,10 +1,8 @@
-from jsonschema import validate
-from jsonschema.exceptions import ValidationError
-from jsonschema.exceptions import SchemaError
+from .schema import *
 
 MOVIE_GENRES = ["Action", "Adventure", "Comedy", "Crime", "Mystery", "Drama", "Fantasy", "Historical",
              "Horror", "Political", "Romance", "Saga", "Satire", "Science", "fiction", "Social", "Thriller"]
-SORTING_METHODS = ['Latest', 'Cheapest']
+MOVIE_SORTING_METHODS = ['Latest', 'Oldest', 'Alphabetical', 'Cheapest']
 
 
 movie_schema = {
@@ -40,24 +38,19 @@ movie_search_schema = {
         },
         "genre": {
             "type": "string",
-            "enum": MOVIE_GENRES + ["Any"]
+            "enum": MOVIE_GENRES + ["All"]
         },
         "sortby": {
             "type": "string",
-            "enum": SORTING_METHODS
+            "enum": MOVIE_SORTING_METHODS
         },
     },
-    "required": ["genre", "sortby", "director", "price", "starting_date"],
+    "required": ["genre", "sortby"],
 }
 
-def validate_movie(data):
-    try:
-        validate(data, movie_schema)
-    except ValidationError as e:
-        return {'ok': False, 'message': e}
-    except SchemaError as e:
-        return {'ok': False, 'message': e}
-    return {'ok': True, 'data': data}
+def validate_movie(movie_data):
+    return validate_schema(movie_data, movie_schema)
 
-def validate_search_query(data):
-    pass
+
+def validate_search_query(search_query):
+    return validate_schema(search_query, movie_search_schema)

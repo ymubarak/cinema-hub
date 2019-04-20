@@ -100,7 +100,7 @@ def get_movies():
 	 'cinema_name': 'Amir',
 	 }
 	# sending get request and saving the response as response object
-	url = URL + "getmovies"
+	url = URL + "getcinemamovies"
 	response = rs.post(url = url, headers=HEADERS, json=params_2)
 	# extracting data in json format
 	data = response.json()
