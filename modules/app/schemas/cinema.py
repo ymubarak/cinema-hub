@@ -124,7 +124,7 @@ def validate_search_cinema(search_query):
     if not result['ok']:
         return result
     # check location if sort method is nearest
-    if search_query['sortby' == 'Nearest'] and search_query.get('location', None) == None:
+    if search_query['sortby'] == 'Nearest' and search_query.get('location', None) == None:
         return {'ok': False, 'message': 'Sorting by \'Nearest\' requires the location field'}
 
     return result

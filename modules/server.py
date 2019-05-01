@@ -51,7 +51,7 @@ def index():
     if g.usermail:
         return render_template(HOME_PAGE)
     else:
-        return redirect(url_for('auth.register'))
+        return redirect(url_for('auth.login'))
 
 # check user is logged in before any request
 @app.before_request
