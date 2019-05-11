@@ -62,6 +62,9 @@ def load_logged_in_user():
 @app.route('/<path:path>')
 def static_proxy(path):
     """ static folder serve """
+    if not g.usermail:
+        return jsonify({'ok': True , 'message': 'User not logged. Please login first.'}), 401
+
     file_name = path.split('/')[-1]
     dir_name = os.path.join(VIEW_DIR, '/'.join(path.split('/')[:-1]))
     return send_from_directory(dir_name, file_name)

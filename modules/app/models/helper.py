@@ -41,9 +41,10 @@ def sort_cinemas(cinemas, query):
     if sort_method == 'Rate':
         cinemas = sorted(cinemas, key = lambda c: calc_total_rate(c['rate']), reverse=True)
     elif sort_method == 'Nearest':
-        cinemas = sorted(cinemas, key = lambda c: calc_distance(c['location'], query['location']))
+        distance_estimate = lambda c: float("inf") if c['location']=='' else calc_distance(c['location'], query['location'])
+        cinemas = sorted(cinemas, key = distance_estimate)
     elif sort_method == 'Alphabetical':
-        cinemas = sorted(cinemas, key = lambda c: c['uname'])
+        cinemas = sorted(cinemas, key = lambda c: c['name'])
 
     return cinemas
 

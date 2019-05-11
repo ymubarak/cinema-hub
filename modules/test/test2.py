@@ -12,7 +12,7 @@ HEADERS = {
 def valid_cinema_login():
 	'''add new cinema'''
 	# defining a params dict for the parameters to be sent to the API
-	params = {'email': 'testcinema@cinemahub.com', 'password': '123456'}
+	params = {'email': 'metro@cinemahub.com', 'password': '123456'}
 	# sending get request and saving the response as response object
 	login_url = URL + "login"
 	rs = requests.session()
@@ -30,7 +30,7 @@ def valid_cinema_login():
 def valid_movie_addition():
 	'''add new movie'''
 	# defining a params dict for the parameters to be sent to the API
-	params = {'email': 'testcinema@cinemahub.com', 'password': '123456'}
+	params = {'email': 'metro@cinemahub.com', 'password': '123456'}
 	# sending get request and saving the response as response object
 	login_url = URL + "login"
 	rs = requests.session()
@@ -39,7 +39,7 @@ def valid_movie_addition():
 	# once logged add movie
 	params_2 = {
 	 'name': 'Venom',
-	 'genre': 'Thriller',
+	 'genre': ['Thriller', 'Action'],
 	 'director': 'Ruben Fleischer',
 	 'price': 35.0,
 	 'starting_date': '2012-04-15',
@@ -60,7 +60,7 @@ def valid_movie_addition():
 def invalid_movie_addition():
 	'''add existing movie'''
 	# defining a params dict for the parameters to be sent to the API
-	params = {'email': 'testcinema@cinemahub.com', 'password': '123456'}
+	params = {'email': 'metro@cinemahub.com', 'password': '123456'}
 	# sending get request and saving the response as response object
 	login_url = URL + "login"
 	rs = requests.session()
@@ -69,7 +69,7 @@ def invalid_movie_addition():
 	# once logged add movie
 	params_2 = {
 	 'name': 'Venom',
-	 'genre': 'Thriller',
+	 'genre': ['Thriller'],
 	 'director': 'Ruben Fleischer',
 	 'price': 35.0,
 	 'starting_date': '2012-04-15',
@@ -89,7 +89,7 @@ def invalid_movie_addition():
 def get_movies():
 	'''get cinema movies'''
 	# defining a params dict for the parameters to be sent to the API
-	params = {'email': 'murad@cinemahub.com', 'password': '123456'}
+	params = {'email': 'metro@cinemahub.com', 'password': '123456'}
 	# sending get request and saving the response as response object
 	login_url = URL + "login"
 	rs = requests.session()
@@ -115,7 +115,7 @@ def get_movies():
 def valid_movie_removal():
 	'''delete existing movie'''
 	# defining a params dict for the parameters to be sent to the API
-	params = {'email': 'testcinema@cinemahub.com', 'password': '123456'}
+	params = {'email': 'metro@cinemahub.com', 'password': '123456'}
 	# sending get request and saving the response as response object
 	login_url = URL + "login"
 	rs = requests.session()
@@ -141,7 +141,7 @@ def valid_movie_removal():
 def invalid_movie_removal():
 	'''delete non-existing movie'''
 	# defining a params dict for the parameters to be sent to the API
-	params = {'email': 'testcinema@cinemahub.com', 'password': '123456'}
+	params = {'email': 'metro@cinemahub.com', 'password': '123456'}
 	# sending get request and saving the response as response object
 	login_url = URL + "login"
 	rs = requests.session()
@@ -166,7 +166,7 @@ def invalid_movie_removal():
 def valid_cinema_review():
 	'''delete non-existing movie'''
 	# defining a params dict for the parameters to be sent to the API
-	params = {'email': 'murad@cinemahub.com', 'password': '123456'}
+	params = {'email': 'metro@cinemahub.com', 'password': '123456'}
 	# sending get request and saving the response as response object
 	login_url = URL + "login"
 	rs = requests.session()
@@ -190,15 +190,67 @@ def valid_cinema_review():
 	print()
 
 
-def top_cinemas(k=10):
-	'''show top k ranked cinemas'''
-	# defining a params dict for the parameters to be sent to the API
-	params = {'email': 'murad@cinemahub.com', 'password': '123456'}
+def edit_cinema_profile():
+	params = {'email': 'metro@cinemahub.com', 'password': '123456'}
 	# sending get request and saving the response as response object
 	login_url = URL + "login"
 	rs = requests.session()
 	login_response = rs.post(url = login_url, headers=HEADERS, json=params)
 
+	# once logged add movie
+	params_2 = {
+	 'location': {'latitude': 90, 'longitude': 70},
+	 'info': 'Contact number +50345687654. Reach us at Metro.com'
+	 }
+	# sending get request and saving the response as response object
+	url = URL + "editprofile"
+	response = rs.post(url = url, headers=HEADERS, json=params_2)
+	# extracting data in json format
+	data = response.json()
+	print('response:', data['message'])
+	if data['ok']== True and response.status_code == 200:
+		print("Passed")
+	else:
+		print("Failed")
+	print()
+
+
+def edit_movie_info():
+	params = {'email': 'metro@cinemahub.com', 'password': '123456'}
+	# sending get request and saving the response as response object
+	login_url = URL + "login"
+	rs = requests.session()
+	login_response = rs.post(url = login_url, headers=HEADERS, json=params)
+
+	# once logged edit movie
+	params_2 = {
+	 'director': 'Guy Ritchie',
+	 'genre': ['Comedy', 'Crime'],
+	 'name': 'Star Trek',
+	 'poster': 'https://m.media-amazon.com/images/G/01/imdb/images/nopicture/large/film-184890147._CB470041630_.png\n',
+	 'price': 25.99, # change price from 18.8 to 25.99
+	 'starting_date': '1998-05-11'
+	 }
+	# sending get request and saving the response as response object
+	url = URL + "editmovie"
+	response = rs.post(url = url, headers=HEADERS, json=params_2)
+	# extracting data in json format
+	data = response.json()
+	print('response:', data['message'])
+	if data['ok']== True and response.status_code == 200:
+		print("Passed")
+	else:
+		print("Failed")
+	print()
+
+
+def top_cinemas(k=10):
+	'''show top k ranked cinemas'''
+	params = {'email': 'admin@cinemahub.com', 'password': '123456'}
+	# sending get request and saving the response as response object
+	login_url = URL + "login"
+	rs = requests.session()
+	login_response = rs.post(url = login_url, headers=HEADERS, json=params)
 	# pass the k parameter
 	params_2 = {'num': k}
 	# sending get request and saving the response as response object
@@ -230,3 +282,9 @@ if __name__ == '__main__':
 	print("Test 7: Review cinema")
 	valid_cinema_review()
 	top_cinemas()
+
+	print("Test 8: Edit cinema profile")
+	edit_cinema_profile()
+
+	print("Test 9: Edit movie info")
+	edit_movie_info()

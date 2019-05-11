@@ -5,7 +5,7 @@ NAME_MAX_LENGTH = 20
 NAME_MIN_LENGTH = 3
 PASSWORD_MIN_LENGTH = 5
 WEBSITE = "cinemahub.com"
-CINEMA_SORTING_METHODS = ['Rate', 'Nearest', 'Alphabetical']
+CINEMA_SORTING_METHODS = ['Rate', 'Nearest', 'Alphabetical'] # default: Alphabetical
 
 
 cinema_schema = {

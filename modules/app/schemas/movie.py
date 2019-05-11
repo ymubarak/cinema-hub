@@ -1,7 +1,7 @@
 from .schema import *
 
-MOVIE_GENRES = ["Action", "Adventure", "Comedy", "Crime", "Mystery", "Drama", "Fantasy", "Historical",
-             "Horror", "Political", "Romance", "Saga", "Satire", "Science", "fiction", "Social", "Thriller"]
+MOVIE_GENRES = ["Action", "Adventure", "Animation", "Biography", "Comedy", "Crime", "Documentary", "Mystery", "Drama",
+ "Fantasy", "Historical", "Horror", "Political", "Romance", "Saga", "Satire", "Science", "fiction", "Social", "Thriller", "Western"]
 MOVIE_SORTING_METHODS = ['Latest', 'Oldest', 'Alphabetical', 'Cheapest']
 
 
@@ -11,16 +11,22 @@ movie_schema = {
         "name": {
             "type": "string",
         },
-        "genre": {
+        "poster": {
             "type": "string",
-            "enum": MOVIE_GENRES
+        },
+        "genre": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": MOVIE_GENRES
+            }
         },
         "director": {
             "type": "string",
         },
         "price": {
             "type": "number",
-             "minimum": 0
+             "minimum": 0.0
         },
         "starting_date": {
             "type": "string",
@@ -33,7 +39,10 @@ movie_schema = {
 movie_search_schema = {
     "type": "object",
     "properties": {
-        "name": {
+        "moviename": {
+            "type": "string",
+        },
+        "cinemaname": {
             "type": "string",
         },
         "genre": {

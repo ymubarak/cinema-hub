@@ -83,3 +83,33 @@ def edit_profile():
         return jsonify({'ok': False, 'message': msg}), err
 
     return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format( data['message'])}), 400
+
+
+
+@bp.route('/editmovie', methods=['POST'])
+def edit_movie():
+    ''' edit profile'''
+    if not g.usermail:
+        return jsonify({'ok': True , 'message': 'User not logged. Please login first.'}), 401
+
+    data = validate_movie(request.get_json())
+    if data['ok']:
+        edit = data['data']
+        cinema = mongo.db.cinemas.find_one({'email': g.usermail})
+        movies_list = cinema.get('movies', [])
+        movie_index = -1
+        for i, m in enumerate(movies_list):
+            if edit['name'] == m['name']:
+                movie_index = i
+                break
+        if movie_index == -1:
+            return jsonify({'ok': False, 'message': 'Movie not found!'}), 400
+        # edit movie
+        movies_list[movie_index] = edit
+        response = mongo.db.cinemas.update_one({'email': cinema['email']}, {'$set': {'movies': movies_list}})
+        if response.acknowledged:
+            return jsonify({'ok': True, 'message': 'Movie information was updated successfully!'}), 200
+        else:
+            return jsonify({'ok': False, 'message': 'Error during updating movie information'}), 400
+
+    return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format( data['message'])}), 400

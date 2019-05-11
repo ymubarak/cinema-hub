@@ -142,15 +142,24 @@ def profile():
 @bp.route('/searchcinema', methods=['POST'])
 def search_cinema():
     ''' search for a specific cinema '''
+    if not g.usermail:
+        return jsonify({'ok': True , 'message': 'User not logged. Please login first.'}), 401
+
     data = validate_search_cinema(request.get_json())
     if data['ok']:
         query = data['data']
         cinemas = []
-        if query['name']:
+        if query.get('name', None) and query['name'] != '':
             pattern = '/.*{}.*/'.format(query['name'])
             cinemas = mongo.db.cinemas.find({'name': { '$regex': pattern }})
         else:
             cinemas = mongo.db.cinemas.find()
+
+        cinemas = list(cinemas)
+        for c in cinemas:
+            del c['movies']
+            c['name'] = mongo.db.users.find_one({'email': c['email']})['uname']
+
         cinemas = sort_cinemas(cinemas,  query)
         return jsonify({'ok': True, 'data': cinemas}), 200
 
@@ -160,21 +169,28 @@ def search_cinema():
 @bp.route('/searchmovie', methods=['POST'])
 def search_movie():
     ''' search for a specific movie '''
+    if not g.usermail:
+        return jsonify({'ok': True , 'message': 'User not logged. Please login first.'}), 401
+
     data = validate_search_query(request.get_json())
     if data['ok']:
         query = data['data']
         movies = []
         cinemas = []
-        if query['cinemaname']:
-            cinema_user = mongo.db.cinemas.find_one({'uname': query['cinemaname']})
+        moviename = query.get('moviename', None)
+        cinemaname = query.get('cinemaname', None)
+        if cinemaname:
+            cinema_user = mongo.db.users.find_one({'uname': cinemaname})
+            if not cinema_user:
+                return jsonify({'ok': False, 'message': 'Cinema does not exist !'}), 401
             cinemas  = mongo.db.cinemas.find({'email': cinema_user['email']})
         else:
             cinemas = mongo.db.cinemas.find()
         for c in cinemas:
             for m in c['movies']:
-                match_genre = query['genre'] in ['All' , m['genre']]
-                pattern = '/.*{}.*/'.format(query['name']) if query['name'] else ''
-                match_name = re.search(pattern, m['name']) if query['name'] else True
+                match_genre = query['genre'] in ['All']+m['genre']
+                pattern = '.*{}.*'.format(moviename) if moviename else ''
+                match_name = re.search(pattern, m['name']) if moviename else True
                 if match_name and match_genre:
                     movies.append(m)
 

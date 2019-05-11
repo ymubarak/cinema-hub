@@ -37,7 +37,6 @@ def register():
             response = mongo.db.users.insert_one(user)
             if response.acknowledged == False:
                 return jsonify({'ok': False, 'message': 'Registeration failed!: {}'}), 400
-            session['usermail'] = user['email']
             return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
         else:
             return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400

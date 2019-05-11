@@ -1,280 +1,277 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Cinemahub | Admin</title>
-	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-	<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-	<script type="text/javascript">
-		$(function () {
-	    $('.navbar-toggle').click(function () {
-        $('.navbar-nav').toggleClass('slide-in');
-        $('.side-body').toggleClass('body-slide-in');
-        $('#search').removeClass('in').addClass('collapse').slideUp(200);
+    <title>Cinemahub | Admin</title>
+    <!-- <link rel="stylesheet" href="/static/movies/css/2bacb5de663bc55f0cbed2b4a7d1504dc.css"> -->
 
-        	/// uncomment code for absolute positioning tweek see top comment in css
-		    //$('.absolute-wrapper').toggleClass('slide-in');
-		        
-		    });
-		   
-		   // Remove menu for searching
-		   $('#search-trigger').click(function () {
-		        $('.navbar-nav').removeClass('slide-in');
-		        $('.side-body').removeClass('body-slide-in');
-
-		        /// uncomment code for absolute positioning tweek see top comment in css
-		        //$('.absolute-wrapper').removeClass('slide-in');
-
-		    });
-		});
-	</script>
-	<!------ Include the above in your HEAD tag ---------->
-	<link rel="stylesheet" type="text/css" href='/static/profile/admin_profile.css'>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript">
-    	$(function () {
-			  $("#addbox").hide();
-		      $('#deletebox').hide();
-		   	  $('#rankbox').hide();
-		 });
+        $(function () {
+            $('.navbar-toggle').click(function () {
+                $('.navbar-nav').toggleClass('slide-in');
+                $('.side-body').toggleClass('body-slide-in');
+                $('#search').removeClass('in').addClass('collapse').slideUp(200);
+
+                /// uncomment code for absolute positioning tweek see top comment in css
+                //$('.absolute-wrapper').toggleClass('slide-in');
+
+            });
+
+            // Remove menu for searching
+            $('#search-trigger').click(function () {
+                $('.navbar-nav').removeClass('slide-in');
+                $('.side-body').removeClass('body-slide-in');
+
+                /// uncomment code for absolute positioning tweek see top comment in css
+                //$('.absolute-wrapper').removeClass('slide-in');
+
+            });
+        });
     </script>
+    <!------ Include the above in your HEAD tag ---------->
+    <link rel="stylesheet" type="text/css" href='/static/profile/admin_profile.css'>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#addbox").hide();
+            $('#deletebox').hide();
+            $('#rankbox').hide();
+        });
+    </script>
+    <!-- <link rel="stylesheet" href="/static/movies/css/fonts.css"> -->
+    <!-- <link rel="stylesheet" href="/static/movies/css/main.css"> -->
+
 </head>
+
 <body>
-<div class="row">
-    <!-- uncomment code for absolute positioning tweek see top comment in css -->
-    <!-- <div class="absolute-wrapper"> </div> -->
-    <!-- Menu -->
-    <div class="side-menu">
+    <div class="row">
+        <!-- uncomment code for absolute positioning tweek see top comment in css -->
+        <!-- <div class="absolute-wrapper"> </div> -->
+        <!-- Menu -->
+        <div class="side-menu">
 
-        <nav class="navbar navbar-default" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <div class="brand-wrapper">
-                    <!-- Hamburger -->
-                    <button type="button" class="navbar-toggle">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
+            <nav class="navbar navbar-default" role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <div class="brand-wrapper">
+                        <!-- Hamburger -->
+                        <button type="button" class="navbar-toggle">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
 
-                    <!-- Brand -->
-                    <div class="brand-name-wrapper">
-                        <a class="navbar-brand" href="#">
-                    Cinema
-                </a>
-                    </div>
+                        <!-- Brand -->
+                        <div class="brand-name-wrapper">
+                            <a class="navbar-brand" href="/">
+                                Cinema
+                            </a>
+                        </div>
 
-                    <!-- Search -->
-                    <a data-toggle="collapse" href="#search" class="btn btn-default" id="search-trigger">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </a>
+                        <!-- Search -->
+                        <a data-toggle="collapse" href="#search" class="btn btn-default" id="search-trigger">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </a>
 
-                    <!-- Search body -->
-                    <div id="search" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <form class="navbar-form" role="search">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Search cinema name">
-                                </div>
-                                <button type="submit" class="btn btn-default "><span class="glyphicon glyphicon-ok"></span></button>
-                            </form>
+                        <!-- Search body -->
+                        <div id="search" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <form class="navbar-form" role="search">
+                                    <div class="form-group">
+                                        <input id="search_cinema_name" type="text" class="form-control" placeholder="Search cinema name">
+                                    </div>
+                                    <a id="search_cinema" class="btn btn-default " href="#">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    </a>
+                                </form>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
-            </div>
+                <!-- Main Menu -->
+                <div class="side-menu-container">
+                    <ul class="nav navbar-nav">
 
-            <!-- Main Menu -->
-            <div class="side-menu-container">
-                <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="/profile/admin_profile.html">
+                                <span class="glyphicon glyphicon-plane"></span> Profile</a>
+                        </li>
+                        <!-- <li>
+                            <a href="#">
+                                <span class="glyphicon glyphicon-cloud"></span> Link</a>
+                        </li> -->
 
-                    <li class="active"><a href="#"><span class="glyphicon glyphicon-plane"></span> Profile</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-cloud"></span> Link</a></li>
+                        <!-- Dropdown 1-->
+                        <li class="panel panel-default" id="dropdown">
+                            <a data-toggle="collapse" href="#dropdown-lvl1">
+                                <span class="glyphicon glyphicon-user"></span> Manage Cinemas
+                                <span class="caret"></span>
+                            </a>
 
-                    <!-- Dropdown 1-->
-                    <li class="panel panel-default" id="dropdown">
-                        <a data-toggle="collapse" href="#dropdown-lvl1">
-                            <span class="glyphicon glyphicon-user"></span> Manage Cinemas <span class="caret"></span>
-                        </a>
-
-                        <!-- Dropdown level 1 -->
-                        <div id="dropdown-lvl1" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <ul class="nav navbar-nav">
-                                    <li><a id="show_addbox" href="#">Add cinema</a></li>
-                                    <li><a id="show_deletebox" href="#">Delete cinema</a></li>
-                                </ul>
+                            <!-- Dropdown level 1 -->
+                            <div id="dropdown-lvl1" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <ul class="nav navbar-nav">
+                                        <li>
+                                            <a id="show_addbox" href="#">Add Cinema</a>
+                                            <li>
+                                                <a id="show_deletebox" href="#">Delete cinema</a>
+                                            </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </li>
+                            </li>
 
-                    <!-- Dropdown 2-->
-                    <li class="panel panel-default" id="dropdown">
-                        <a data-toggle="collapse" href="#dropdown2-lvl1">
-                            <span class="glyphicon glyphicon-user"></span> Reports <span class="caret"></span>
-                        </a>
+                            <!-- Dropdown 2-->
+                            <li class="panel panel-default" id="dropdown">
+                                <a data-toggle="collapse" href="#dropdown2-lvl1">
+                                    <span class="glyphicon glyphicon-user"></span> Reports
+                                    <span class="caret"></span>
+                                </a>
 
-                        <!-- Dropdown level 2 -->
-                        <div id="dropdown2-lvl1" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <ul class="nav navbar-nav">
-                                    <li><a id="show_rankbox"href="#">Top cinemas</a></li>
-                                    <li><a href="#">Top sales</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li><a href="#"><span class="glyphicon glyphicon-signal"></span> info</a></li>
-
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </nav>
-
-    </div>
-
-    <!-- Main Content -->
-    <div class="container-fluid">
-        <div class="side-body">
-            <section id="addbox" class="content" >
-                <!-- Default box -->
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Add new Cinema</h3>
-                        <!-- general form elements -->
-                        <div class="box box-primary">
-                            <!-- /.box-header -->
-                            <!-- form start -->
-                            <form role="form">
-                                <div class="box-body">
-                                    <div class="form-group">
-                                        <label for="cinemaName">Cinema Name</label>
-                                        <input type="text" class="form-control" id="cinemaName" placeholder="Enter Cinema Email">
+                                <!-- Dropdown level 2 -->
+                                <div id="dropdown2-lvl1" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul class="nav navbar-nav">
+                                            <li>
+                                                <a id="show_rankbox" href="#">Top cinemas</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Top sales</a>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Email address</label>
-                                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Password</label>
-                                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                                    </div>
-                                    <!-- /.box-body -->
-                                    <div class="box-footer">
-                                        <button class="btn btn-primary">Add</button>
-                                    </div>
-                            </form>
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                    </div>
-                    <!-- /.box -->
-            </section>
-            <br>
-            <br>
+                                </div>
+                            </li>
 
-            <section id="deletebox" class="content">
-                <!-- Default box -->
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Delete Cinema</h3>
-                        <!-- general form elements -->
-                        <div class="box box-primary">
-                            <!-- /.box-header -->
-                            <!-- form start -->
-                            <form role="form">
-                                <div class="box-body">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Email address</label>
-                                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                                    </div>
-                                    <!-- /.box-body -->
-                                    <div class="box-footer">
-                                        <button style="background-color:red; border: 1px solid transparent" class="btn btn-primary">Delete</button>
-                                    </div>
-                            </form>
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                    </div>
-                    <!-- /.box -->
-            </section>
-            
-            <section id="rankbox">
-	            <h1> Top Ranked Cinemas</h1>
-	            <div class="col-sm-6">
-	                <div class="dataTables_length" id="example1_length">
-	                    <label>Top
-	                        <select name="example1_length" aria-controls="example1" class="form-control input-sm">
-	                            <option value="5">5</option>
-	                            <option value="10">10</option>
-	                            <option value="20">20</option>
-	                            <option value="50">50</option>
-	                        </select>
-	                    </label>
-	                </div>
-	            </div>
-	            <section class="box-body">
-	                <div class="table-responsive">
-	                    <table class="table no-margin">
-	                        <thead>
-	                            <tr>
-	                                <th>Rank #</th>
-	                                <th>Cinema</th>
-	                                <th>Rate</th>
-	                            </tr>
-	                        </thead>
-	                        <tbody>
-	                            <tr>
-	                                <td>1</td>
-	                                <td>Metro</td>
-	                                <td><span class="label label-success">4.3</span></td>
-	                            </tr>
-	                            <tr>
-	                                <td>2</td>
-	                                <td>Amir</td>
-	                                <td><span class="label label-warning">4.1</span></td>
-	                            </tr>
-	                            <tr>
-	                                <td>3</td>
-	                                <td>Green Plaza</td>
-	                                <td><span class="label label-danger">3.1</span></td>
-	                            </tr>
-	                            <tr>
-	                                <td>4</td>
-	                                <td>Samsung Smart TV</td>
-	                                <td><span class="label label-info">2.9</span></td>
-	                            </tr>
-	                        </tbody>
-	                    </table>
-	                </div>
-	            <!-- /.table-responsive -->
-	            </section>
-            </section>
+                            <li>
+                                <a href="#">
+                                    <span class="glyphicon glyphicon-signal"></span> info</a>
+                            </li>
 
-            </div>
-            </div>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </nav>
+
         </div>
-        <script type="text/javascript">
-        	$(document).ready(function() {
 
-			    $("#show_addbox").click(function(){
-			    	$("#addbox").show();
-			    	$('#deletebox').hide();
-			    	$('#rankbox').hide();
-			    });
-			    $("#show_deletebox").click(function(){
-			    	$("#addbox").hide();
-			    	$('#deletebox').show();
-			    	$('#rankbox').hide();
-			    });
-			    $("#show_rankbox").click(function(){
-			    	$("#addbox").hide();
-			    	$('#deletebox').hide();
-			    	$('#rankbox').show();
-			    });
-			});
-        </script>
+        <!-- Main Content -->
+        <div class="container-fluid">
+            <div class="side-body">
+                <section id="addbox" class="content">
+                    <!-- Default box -->
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Add new Cinema</h3>
+                            <!-- general form elements -->
+                            <div class="box box-primary">
+                                <!-- /.box-header -->
+                                <!-- form start -->
+                                <form id="add_cinema_form" role="form">
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <label for="cinemaName">Cinema Name</label>
+                                            <input type="text" class="form-control" name="uname" placeholder="Enter Cinema Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Email address</label>
+                                            <input type="email" class="form-control" name="email" placeholder="Enter email">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Password</label>
+                                            <input type="password" class="form-control" name="password" placeholder="Password">
+                                        </div>
+                                        <!-- /.box-body -->
+                                        <div class="box-footer">
+                                            <a id="add_cinema" class="btn btn-primary" href="#">Add</a>
+                                        </div>
+                                </form>
+                                </div>
+                                <!-- /.box -->
+                            </div>
+                        </div>
+                        <!-- /.box -->
+                </section>
+                <br>
+                <br>
+
+                <section id="deletebox" class="content">
+                    <!-- Default box -->
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Delete Cinema</h3>
+                            <!-- general form elements -->
+                            <div class="box box-primary">
+                                <!-- /.box-header -->
+                                <!-- form start -->
+                                <form role="form">
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <label for="deleted_cinema_email">Email address</label>
+                                            <input type="email" class="form-control" id="deleted_cinema_email" placeholder="Enter email">
+                                        </div>
+                                        <!-- /.box-body -->
+                                        <div class="box-footer">
+                                            <button id="delete_cinema_btn" style="background-color:red; border: 1px solid transparent" class="btn btn-primary">Delete</button>
+                                        </div>
+                                </form>
+                                </div>
+                                <!-- /.box -->
+                            </div>
+                        </div>
+                        <!-- /.box -->
+                </section>
+
+                <section id="rankbox">
+                    <h1> Top Ranked Cinemas</h1>
+                    <div class="col-sm-6">
+                        <div class="dataTables_length" id="example1_length">
+                            <label>Top
+                                <select name="example1_length" aria-controls="example1" class="form-control input-sm">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <section class="box-body">
+                        <div class="table-responsive">
+                            <table class="table no-margin" id="rank_table">
+                                <thead>
+                                    <tr>
+                                        <th>Rank #</th>
+                                        <th>Cinema</th>
+                                        <th>Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </section>
+                </section>
+
+                <section id="cinema_box">
+                    <div id="cinema_box_row" class="row">
+                    </div>
+                </section>
+                </div>
+                </div>
+            </div>
+            <script type="text/javascript" src="/static/movies/js/modded1.js.download"></script>
+            <script type="text/javascript" src="/static/movies/js/addthis_widget.js.download" async="async"></script>
+            <script type="text/javascript" src="/static/profile.js"></script>
+
 </body>
+
 </html>
